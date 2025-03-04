@@ -1,4 +1,4 @@
-import React, { createContext, useRef, useState } from 'react';
+import React, { createContext, useRef, useState,useEffect } from 'react';
 import todo_icon from '../assets/todo_icon.png';
 import Todoitem from './Todoitem';
 
@@ -6,7 +6,14 @@ import Todoitem from './Todoitem';
 const todolistContext = createContext();
 
 const TodolistProvider = ({ children }) => {
-  const [todolist, setTodolist] = useState([]);
+	const [todolist,setTodolist] = useState(()=>{
+		const savedTodos = localStorage.getItem('todos');
+		return savedTodos ? JSON.parse(savedTodos) : []
+
+	})
+	useEffect(()=>{
+		localStorage.setItem('todos',JSON.stringify(todolist))
+	},[todolist])
 
   return (
     <todolistContext.Provider value={{ todolist, setTodolist }}>
